@@ -1,0 +1,68 @@
+{-
+ | Título: Temporizador Funcional en Haskell
+ | Descripción: Demuestra el paso de una función (acción IO) como parámetro
+ |              en Haskell, usando recursión para el bucle.
+ |
+ | Curso: MCA 1 2026-1 FCiencias (Ejemplo adaptado de Scala/Java)
+ | Tema: Paso de una función como parámetro / Programación Funcional Pura
+ |
+ | Autor: Castillo Sandoval Rodrigo de Jesús
+ | Fecha: 6 Nov 2025
+ -}
+
+-- Importamos la función para "dormir" el hilo (el equivalente a Thread.sleep)
+import Control.Concurrent (threadDelay)
+-- Importamos 'when' para hacer el código más legible
+import Control.Monad (when)
+
+{-
+ | Esta es la función de orden superior.
+ | Recibe una "acción" de IO (la función 'fcallback') y un contador 'n'.
+ |
+ | En Haskell no hay bucles 'while', usamos RECURSIÓN.
+ | La función se llama a sí misma con un nuevo valor (n+1)
+ | hasta que la condición (n == 7) se cumple.
+ |
+ | Nota la firma del tipo:
+ | (IO ()) -> Int -> IO ()
+ | Significa: Recibe una (función IO) y un (Int) y devuelve una (función IO).
+-}
+unaVezPorSegundo :: IO () -> Int -> IO ()
+unaVezPorSegundo fcallback n = do
+    
+    -- 1. Ejecutamos la función (acción) que nos pasaron
+    fcallback
+    
+    -- 2. Dormimos el hilo por 1,000,000 microsegundos (1 segundo)
+    --    (En Haskell, threadDelay usa microsegundos, no milisegundos)
+    threadDelay 1000000
+
+    -- 3. Condición de recursión (el "bucle")
+    --    'when' es una forma elegante de 'if'.
+    --    "Cuando (n+1) sea menor a 7, vuelve a ejecutar esta función
+    --     pero esta vez con el contador en (n+1)"
+    when (n + 1 < 7) $ do
+        unaVezPorSegundo fcallback (n + 1)
+
+-- Esta es la función concreta que queremos pasar como parámetro.
+-- Es una "acción de IO" porque imprime en la pantalla.
+tiempoVuela :: IO ()
+tiempoVuela = putStrLn "The time fly and never comeback..."
+
+-- 'main' es el punto de entrada de todo programa en Haskell.
+-- Es la primera acción IO que se ejecuta.
+main :: IO ()
+main = do
+    putStrLn "Iniciando el temporizador funcional en Haskell..."
+    
+    -- Aquí está la "magia" funcional.
+    --
+    -- Llamamos a 'unaVezPorSegundo' pasándole dos parámetros:
+    -- 1. La FUNCIÓN 'tiempoVuela'
+    -- 2. El valor inicial del contador, '0'
+    --
+    -- Nota que en Haskell, no hay '::' ni nada especial.
+    -- Pasar funciones es tan natural como pasar números.
+    unaVezPorSegundo tiempoVuela 0
+    
+    putStrLn "Temporizador finalizado."
