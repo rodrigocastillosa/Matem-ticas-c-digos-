@@ -5,7 +5,7 @@
  |
  | Curso: MCA 1 2026-1 FCiencias (Ejemplo adaptado de Scala/Java)
  | Tema: Paso de una función como parámetro / Programación Funcional Pura
- |
+ | Referencia: Tema 2: Introducción a la programación con Haskell https://share.google/uf5IeFwxu7MzWchiU
  | Autor: Castillo Sandoval Rodrigo de Jesús
  | Fecha: 6 Nov 2025
  -}
@@ -65,4 +65,5 @@ main = do
     -- Pasar funciones es tan natural como pasar números.
     unaVezPorSegundo tiempoVuela 0
     
+
     putStrLn "Temporizador finalizado."
